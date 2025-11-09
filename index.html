@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学生信息管理系统</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <h1>学生信息管理系统</h1>
+      <nav id="top-nav" class="top-nav hidden">
+        <button id="nav-students" class="nav-btn" data-target="students-panel">学生管理</button>
+        <button id="nav-courses" class="nav-btn" data-target="courses-panel">课程管理</button>
+        <button id="nav-teachers" class="nav-btn" data-target="teachers-panel">教师管理</button>
+        <button id="logout-btn" class="nav-btn danger">退出登录</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="alerts" class="alerts" aria-live="polite"></section>
+
+      <section id="auth-panel" class="card">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="login-form">登录</button>
+          <button class="tab-btn" data-tab="register-form">注册</button>
+        </div>
+
+        <form id="login-form" class="form active" autocomplete="on">
+          <label>
+            用户名
+            <input type="text" id="login-username" name="username" required autofocus>
+          </label>
+          <label>
+            密码
+            <input type="password" id="login-password" name="password" required>
+          </label>
+          <button type="submit" class="primary-btn">登录</button>
+        </form>
+
+        <form id="register-form" class="form">
+          <label>
+            用户名
+            <input type="text" id="register-username" name="username" required>
+          </label>
+          <label>
+            密码
+            <input type="password" id="register-password" name="password" minlength="6" required>
+          </label>
+          <label>
+            确认密码
+            <input type="password" id="register-password-confirm" name="passwordConfirm" minlength="6" required>
+          </label>
+          <button type="submit" class="primary-btn">注册</button>
+        </form>
+      </section>
+
+      <section id="management-panel" class="management hidden">
+        <h2 id="panel-title">学生管理</h2>
+        <div class="panel-toolbar">
+          <button class="primary-btn" id="add-record-btn">新增</button>
+          <div class="search-group">
+            <input type="search" id="search-input" placeholder="搜索关键字">
+            <button id="search-btn" class="secondary-btn">查询</button>
+          </div>
+        </div>
+
+        <div class="responsive-table">
+          <table>
+            <thead>
+              <tr id="table-header"></tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+          <div class="empty-state hidden" id="empty-state">暂无数据</div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="record-dialog">
+      <form method="dialog" id="record-form">
+        <h3 id="dialog-title">新增记录</h3>
+        <div id="dialog-fields"></div>
+        <div class="dialog-actions">
+          <button value="cancel" class="secondary-btn">取消</button>
+          <button type="submit" class="primary-btn">保存</button>
+        </div>
+      </form>
+    </dialog>
+  </div>
+
+  <template id="table-row-template">
+    <tr>
+      <td class="nowrap" data-field="name"></td>
+      <td data-field="gender"></td>
+      <td data-field="age"></td>
+      <td data-field="class_name"></td>
+      <td class="actions">
+        <button class="link-btn edit-btn">编辑</button>
+        <button class="link-btn danger delete-btn">删除</button>
+      </td>
+    </tr>
+  </template>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
+

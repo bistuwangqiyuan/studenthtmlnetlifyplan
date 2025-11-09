@@ -1,0 +1,16 @@
+{
+  "name": "student-info-system",
+  "version": "1.0.0",
+  "description": "学生信息管理系统 - 静态前端 + Netlify Functions + Neon 数据库",
+  "scripts": {
+    "dev": "netlify dev",
+    "lint": "echo \"No linting configured\"",
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.12.0"
+  }
+}
+
