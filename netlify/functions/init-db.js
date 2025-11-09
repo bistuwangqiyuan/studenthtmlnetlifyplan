@@ -1,8 +1,15 @@
 const bcrypt = require("bcryptjs");
 const { withTransaction } = require("./db");
+const http = require("./_shared/http");
 
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "admin";
+
+const dropStatements = [
+  `DROP TABLE IF EXISTS students CASCADE;`,
+  `DROP TABLE IF EXISTS courses CASCADE;`,
+  `DROP TABLE IF EXISTS teachers CASCADE;`,
+];
 
 const schemaStatements = [
   `
@@ -14,7 +21,7 @@ const schemaStatements = [
   );
   `,
   `
-  CREATE TABLE IF NOT EXISTS students (
+  CREATE TABLE students (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     gender VARCHAR(10),
@@ -25,7 +32,7 @@ const schemaStatements = [
   );
   `,
   `
-  CREATE TABLE IF NOT EXISTS courses (
+  CREATE TABLE courses (
     id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     code VARCHAR(50) UNIQUE NOT NULL,
@@ -36,7 +43,7 @@ const schemaStatements = [
   );
   `,
   `
-  CREATE TABLE IF NOT EXISTS teachers (
+  CREATE TABLE teachers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(120) NOT NULL,
     title VARCHAR(120),
@@ -109,6 +116,12 @@ async function initializeDatabase() {
   const passwordHash = await bcrypt.hash(ADMIN_PASSWORD, 10);
 
   return withTransaction(async (client) => {
+    // Drop existing tables to ensure clean slate
+    for (const statement of dropStatements) {
+      await client.query(statement);
+    }
+
+    // Create tables with correct schema
     for (const statement of schemaStatements) {
       await client.query(statement);
     }
@@ -133,26 +146,20 @@ async function initializeDatabase() {
 }
 
 exports.handler = async (event) => {
+  if (event.httpMethod === "OPTIONS") {
+    return http.options();
+  }
+
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      headers: { Allow: "POST" },
-      body: JSON.stringify({ error: "Method Not Allowed" }),
-    };
+    return http.methodNotAllowed(["POST"]);
   }
 
   try {
     const result = await initializeDatabase();
-    return {
-      statusCode: 200,
-      body: JSON.stringify(result),
-    };
+    return http.success(result);
   } catch (error) {
     console.error("初始化数据库失败", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message || "初始化失败" }),
-    };
+    return http.serverError(error);
   }
 };
 

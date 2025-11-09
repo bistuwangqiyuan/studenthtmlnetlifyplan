@@ -1,7 +1,7 @@
-const { query } = require("../db");
-const http = require("../_shared/http");
-const { withAuth } = require("../_shared/auth");
-const { validateTeacher } = require("../_shared/validators");
+const { query } = require("./db");
+const http = require("./_shared/http");
+const { withAuth } = require("./_shared/auth");
+const { validateTeacher } = require("./_shared/validators");
 
 function parseBody(event) {
   try {
@@ -12,7 +12,11 @@ function parseBody(event) {
 }
 
 function parseId(event) {
-  const id = event.pathParameters?.id;
+  // Try query parameter, path parameter, or extract from path
+  let id = event.queryStringParameters?.id || 
+           event.pathParameters?.id || 
+           event.path.match(/\/teachers[/-](?:id\/)?(\d+)/)?.[1];
+  
   if (!id) return null;
   const numeric = Number(id);
   if (!Number.isInteger(numeric) || numeric <= 0) return null;

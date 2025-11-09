@@ -11,3 +11,18 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+[[redirects]]
+  from = "/.netlify/functions/students/:id"
+  to = "/.netlify/functions/students-id?id=:id"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/courses/:id"
+  to = "/.netlify/functions/courses-id?id=:id"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/teachers/:id"
+  to = "/.netlify/functions/teachers-id?id=:id"
+  status = 200
+
