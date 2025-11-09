@@ -128,6 +128,7 @@ function initAuthForms() {
         body: { username, password },
       });
       handleAuthSuccess(result);
+      showAlert("登录成功", "success");
     } catch (error) {
       showAlert(error.message, "error");
     }
